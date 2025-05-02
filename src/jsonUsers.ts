@@ -13,7 +13,11 @@ export class JsonUsers extends Users {
 
   constructor(usersList: User[] = []) {
     super(usersList);
-    this.database = new LowSync(new JSONFileSync('./db/users.json'));
+    try {
+      this.database = new LowSync(new JSONFileSync(`${process.cwd()}/db/users.json`));
+    } catch (err) {
+      throw new Error(`Error creating or reading a file: ${err}`)
+    }
     this.database.read();
 
     if (this.database.data == null) {
@@ -36,7 +40,7 @@ export class JsonUsers extends Users {
     return username;
   }
 
-  storeUsers() {
+  private storeUsers(): void {
     this.database.data.users = this.getUsers();
     this.database.write();
   }

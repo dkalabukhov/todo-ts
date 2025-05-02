@@ -12,7 +12,12 @@ export class JsonTodoCollection extends TodoCollection {
 
   constructor(public userName: string, todoItems: TodoItem[] = []) {
     super(userName, []);
-    this.database = new LowSync(new JSONFileSync(`./db/${userName}.json`));
+    try {
+      this.database = new LowSync(new JSONFileSync(`${process.cwd()}/db/${userName}.json`));
+    } catch(err) {
+      throw new Error(`Error creating or reading a file: ${err}`)
+    }
+
     this.database.read();
 
     if (this.database.data == null) {
@@ -42,7 +47,7 @@ export class JsonTodoCollection extends TodoCollection {
     this.storeTasks();
   }
 
-  private storeTasks() {
+  private storeTasks(): void {
     this.database.data.tasks = [...this.itemMap.values()];
     this.database.write();
   }

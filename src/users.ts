@@ -48,12 +48,4 @@ export class Users {
     this.usersMap.delete(id);
     return username;
   }
-
-  deleteUserDatabase(username) {
-    fs.unlink(`${process.cwd()}/db/${username}.json`, (err) => {
-      if (err) {
-        console.error(`Error removing file: ${err}`);
-      }
-    });
-  }
 }

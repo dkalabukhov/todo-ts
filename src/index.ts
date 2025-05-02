@@ -3,6 +3,21 @@ import inquirer from 'inquirer';
 import { JsonTodoCollection } from "./jsonTodoCollection.js";
 import { JsonUsers } from "./jsonUsers.js";
 import { Users } from "./users.js";
+import fs from 'fs';
+
+fs.mkdir(`${process.cwd()}/db`, { recursive: true }, (err) => {
+  if (err) {
+    throw Error(`Error creating a directory: ${err}`);
+  }
+});
+
+function removeUsersDatabase(username: string): void {
+  fs.unlink(`${process.cwd()}/db/${username}.json`, (err) => {
+    if (err) {
+      throw new Error(`Error removing a file: ${err}`);
+    }
+  });
+}
 
 const users: Users = new JsonUsers();
 
@@ -120,7 +135,7 @@ function promptDelete(): void {
       const IdsToDelete = answers.delete as number[];
       IdsToDelete.forEach((id) => {
         const username = users.deleteUser(id);
-        users.deleteUserDatabase(username);
+        removeUsersDatabase(username);
       });
       promptChoosingUser();
     });
