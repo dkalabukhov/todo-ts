@@ -12,7 +12,7 @@ export class JsonTodoCollection extends TodoCollection {
 
   constructor(public userName: string, todoItems: TodoItem[] = []) {
     super(userName, []);
-    this.database = new LowSync(new JSONFileSync('Todos.json'));
+    this.database = new LowSync(new JSONFileSync(`./db/${userName}.json`));
     this.database.read();
 
     if (this.database.data == null) {
